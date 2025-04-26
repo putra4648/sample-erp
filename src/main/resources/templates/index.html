@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Document</title>
-  </head>
-  <body>
-    <h1>Welcome</h1>
-    <p th:text="${username}"></p>
-    <p th:text="${roles}"></p>
-  </body>
+</head>
+<body>
+<h1>Welcome</h1>
+<p th:text="${username}"></p>
+<p th:text="${roles}"></p>
+<p>Hello</p>
+
+<a href="/logout">
+    <button class="btn btn-lg btn-primary" type="button">Logout</button>
+</a>
+</body>
 </html>
