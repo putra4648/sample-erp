@@ -1,18 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Document</title>
-</head>
-<body>
-<h1>Welcome</h1>
-<p th:text="${username}"></p>
-<p th:text="${roles}"></p>
-<p>Hello</p>
-
-<a href="/logout">
-    <button class="btn btn-lg btn-primary" type="button">Logout</button>
-</a>
-</body>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{template.html}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sample ERP</title>
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <div class="row justify-content-between">
+        <div class="col">
+          <h1>Welcome, <span th:text="${username}"></span></h1>
+        </div>
+        <div class="col">
+          <a href="/logout">
+            <button class="btn btn-lg btn-primary" type="button">Logout</button>
+          </a>
+        </div>
+      </div>
+      <div sec:authorize="hasAuthority('MANAGER')">
+        <div>I'm Manager</div>
+      </div>
+      <div sec:authorize="hasAuthority('ADMIN')">
+        <div>I'm Admin</div>
+      </div>
+      <div sec:authorize="hasAuthority('STAFF')">
+        <div>I'm Staff</div>
+      </div>
+    </div>
+  </body>
 </html>

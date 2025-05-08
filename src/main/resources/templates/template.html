@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <title>Layout page</title>
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/dist/css/bootstrap.min.css}"
+    />
+  </head>
+  <body>
+    <div class="container mx-auto" layout:fragment="content"></div>
+  </body>
+</html>

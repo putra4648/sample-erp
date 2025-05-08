@@ -1,6 +1,11 @@
 package id.putra.my_erp.config;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -17,12 +22,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -35,23 +35,30 @@ public class SecurityConfig {
         return claims -> {
             var realmAccess = Optional.ofNullable((Map<String, Object>) claims.get("realm_access"));
             var roles = realmAccess.flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
-            return roles.stream().flatMap(Collection::stream).map(SimpleGrantedAuthority::new).map(GrantedAuthority.class::cast).toList();
+            return roles.stream().flatMap(Collection::stream).map(SimpleGrantedAuthority::new)
+                    .map(GrantedAuthority.class::cast).toList();
         };
     }
 
     @Bean
     GrantedAuthoritiesMapper authenticationConverter(AuthoritiesConverter authoritiesConverter) {
-        return (authorities) -> authorities.stream().filter(authority -> authority instanceof OidcUserAuthority).map(OidcUserAuthority.class::cast).map(OidcUserAuthority::getIdToken).map(OidcIdToken::getClaims).map(authoritiesConverter::convert).flatMap(roles -> roles.stream()).collect(Collectors.toSet());
+        return (authorities) -> authorities.stream().filter(authority -> authority instanceof OidcUserAuthority)
+                .map(OidcUserAuthority.class::cast).map(OidcUserAuthority::getIdToken).map(OidcIdToken::getClaims)
+                .map(authoritiesConverter::convert).flatMap(roles -> roles.stream()).collect(Collectors.toSet());
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(Customizer.withDefaults()).authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated()).oauth2Login(Customizer.withDefaults()).oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())).logout(logout -> logout.logoutSuccessHandler(oidcLogoutSuccessHandler()));
+        http.csrf(Customizer.withDefaults())
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+                .oauth2Login(Customizer.withDefaults())
+                .logout(logout -> logout.logoutSuccessHandler(oidcLogoutSuccessHandler()));
         return http.build();
     }
 
     private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository);
+        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(
+                this.clientRegistrationRepository);
         oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
         return oidcLogoutSuccessHandler;
     }
