@@ -5,20 +5,28 @@ services:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: 7000
       KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: "true"
       KC_LOG_LEVEL: info
       KC_DB: postgres
       KC_DB_USERNAME: admin
       KC_DB_PASSWORD: admin123
       KC_DB_URL: jdbc:postgresql://keycloak_db/sample_erp
+    volumes:
+      - ./data:/opt/keycloak/data/import
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000/health/ready"]
       interval: 15s
       timeout: 2s
       retries: 15
-    command: ["start-dev", "--http-port", "7000", "--https-port", "7443"]
+    command:
+      [
+        "start-dev",
+        "--import-realm",
+        "--http-port",
+        "7000",
+        "--https-port",
+        "7443",
+      ]
     ports:
       - 7000:7000
       - 7443:7443
