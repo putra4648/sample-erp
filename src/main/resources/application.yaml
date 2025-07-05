@@ -3,15 +3,12 @@ spring:
     name: my_erp
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://localhost:7000/realms/my_erp/protocol/openid-connect/certs
       client:
         registration:
           my-erp-client:
             provider: my-erp-provider
-            client-id: erp-client
-            client-secret: ZZArSfBrwxnZ8kyfQ7FuAazl1L0M8bFP
+            client-id: erp_client
+            # client-secret: ZZArSfBrwxnZ8kyfQ7FuAazl1L0M8bFP
             authorization-grant-type: authorization_code
             scope: openid,profile
         provider:
