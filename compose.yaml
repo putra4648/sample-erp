@@ -1,6 +1,6 @@
 services:
-  keycloaK:
-    image: quay.io/keycloak/keycloak:26.2.2
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
     environment:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: 7000
@@ -9,6 +9,10 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: "true"
       KC_LOG_LEVEL: info
+      KC_DB: postgres
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin123
+      KC_DB_URL: jdbc:postgresql://keycloak_db/sample_erp
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000/health/ready"]
       interval: 15s
@@ -18,3 +22,19 @@ services:
     ports:
       - 7000:7000
       - 7443:7443
+    depends_on:
+      - keycloak_db
+
+  keycloak_db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: sample_erp
+    ports:
+      - 5000:5432
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U admin-d sample_erp'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
