@@ -1,16 +1,11 @@
+server:
+  port: 8000
+
 spring:
   application:
     name: my_erp
   security:
     oauth2:
-      client:
-        registration:
-          my-erp-client:
-            provider: my-erp-provider
-            client-id: erp_client
-            # client-secret: ZZArSfBrwxnZ8kyfQ7FuAazl1L0M8bFP
-            authorization-grant-type: authorization_code
-            scope: openid,profile
-        provider:
-          my-erp-provider:
+      resourceserver:
+          jwt:
             issuer-uri: http://localhost:7000/realms/my_erp

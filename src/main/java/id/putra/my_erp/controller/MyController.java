@@ -1,5 +1,8 @@
 package id.putra.my_erp.controller;
 
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -11,10 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MyController {
 
     @GetMapping("/")
-    public String index(Authentication authentication, @AuthenticationPrincipal OidcUser user, Model model) {
-        model.addAttribute("username", user.getPreferredUsername());
-        model.addAttribute("roles", authentication.getAuthorities().toString());
-        return "index";
+    public ResponseEntity<Map<String, Object>> index() {
+      return ResponseEntity.ok(Map.of("message", "Welcome to My ERP System"));
     }
 
 }
